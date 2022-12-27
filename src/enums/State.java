@@ -1,3 +1,5 @@
+package enums;
+
 public enum State
 {
     SIFS_before_emitCTS(3),

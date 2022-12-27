@@ -1,4 +1,7 @@
-public class MobileStation implements Station{
+public class MobileStation extends Station{
+    public MobileStation() {
+    }
+
     @Override
     public void activeAction() {
 
