@@ -5,6 +5,6 @@ public class Main {
         System.out.println("Hello world!");
         State x = State.Countdown;
 
-        System.out.print(x.label);
+        System.out.print((int) Math.pow(2, 3));
     }
 }

@@ -13,7 +13,7 @@ public enum State
     DIFS_beforeCountdown(5),
     Countdown(5),
     emitRTS(15),
-    SIFS_before_revCTS(3),
+    SIFS_before_rcvCTS(3),
     rcvCTS(16),
     SIFS_before_emitPKT(3),
     emitPKT(60),

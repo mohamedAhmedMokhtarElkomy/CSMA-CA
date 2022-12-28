@@ -7,6 +7,7 @@ public abstract class Station {
     boolean idle = true;
     String currentSender = "";
     State stationState;
+    Channel channel;
 
     //TODO Channel channel;
     Packet packet = new Packet();
