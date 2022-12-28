@@ -2,9 +2,10 @@ package enums;
 
 public enum State
 {
+    IDLE(0),
     SIFS_before_emitCTS(3),
     emitCTS(15),
-    SIFS_beforercvPKT(3),
+    SIFS_before_rcvPKT(3),
     rcvPKT(61),
     SIFS_before_emitACk(3),
     emitACK(10),
