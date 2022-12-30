@@ -1,9 +1,9 @@
-import enums.State;
+import enums.StationState;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Hello world!");
-        State x = State.Countdown;
+        StationState x = StationState.Countdown;
 
         System.out.print((int) Math.pow(2, 3));
     }
