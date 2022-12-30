@@ -1,3 +1,4 @@
+import enums.PacketType;
 import enums.StationState;
 
 public class Main {
@@ -5,6 +6,6 @@ public class Main {
         System.out.println("Hello world!");
         StationState x = StationState.Countdown;
 
-        System.out.print((int) Math.pow(2, 3));
+        System.out.print(StationState.emitACK.toString());
     }
 }

@@ -10,43 +10,44 @@ public class Packet {
 
     private String message;
 
-    MobileStation mobileStation;
-
     public void setOwner(String owner) {
         this.owner = owner;
-    }
-
-    public void setType(PacketType type) {
-        this.type = type;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public int getNav() {
-        return nav;
-    }
-
-    public void setNav(int nav) {
-        this.nav = nav;
-    }
-
-    boolean isCorrupted()
-    {
-        return false;
     }
 
     public String getOwner() {
         return owner;
     }
 
-    public PacketType getType(){
+    public void setType(PacketType type) {
+        this.type = type;
+    }
+
+    public PacketType getType() {
         return type;
 
     }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+
+    public void setNav(int nav) {
+        this.nav = nav;
+    }
+
+    public int getNav() {
+        return nav;
+    }
+
+
+    boolean isCorrupted() {
+        return false;
+    }
+
+
 }

@@ -17,11 +17,11 @@ public enum StationState
     rcvCTS(160),
     SIFS_before_emitPKT(30),
     emitPKT(600),
-    SIFS_before_rcvACK(35),
+    SIFS_before_rcvACK(30),
     rcvACK(110);
-    public final int label;
-    StationState(int label) {
-        this.label = label;
+    public final int time;
+    StationState(int time) {
+        this.time = time;
     }
 
 }
