@@ -1,6 +1,7 @@
 package GUI;
 
 import stations.BaseStation;
+import stations.Channel;
 import stations.MobileStation;
 
 import javax.swing.*;
@@ -12,6 +13,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
     int count = 0;// store number of clicks
 
+    public static Channel mainChannel;
     JFrame frame;
     JButton mobile1Button;
     JButton mobile2Button;
@@ -55,12 +57,13 @@ public class MainFrame extends JFrame implements ActionListener {
 
         initializeFrame();
 
-        mobileStation1 = new MobileStation("1", baseStation);
-//        mobileStation2 = new MobileStation("2");
-//        mobileStation3 = new MobileStation("3");
+        mobileStation1 = new MobileStation("1");
+        mobileStation2 = new MobileStation("2");
+        mobileStation3 = new MobileStation("3");
 
-        baseStation = new BaseStation(mobileStation1);
-        mobileStation1.setBaseStation(baseStation); //TODO to be removed
+        baseStation = new BaseStation();
+
+        mainChannel = new Channel(baseStation, mobileStation1, mobileStation2, mobileStation3);
 
         mobile1Button.addActionListener(this);
         mobile2Button.addActionListener(this);
@@ -77,12 +80,12 @@ public class MainFrame extends JFrame implements ActionListener {
         baseThread.start();
 
         Thread thread1 = new Thread(mobileStation1);
-//        Thread thread2 = new Thread(mobileStation2);
-//        Thread thread3 = new Thread(mobileStation3);
+        Thread thread2 = new Thread(mobileStation2);
+        Thread thread3 = new Thread(mobileStation3);
 
         thread1.start();
-//        thread2.start();
-//        thread3.start();
+        thread2.start();
+        thread3.start();
     }
 
     private void constructFrame() {
@@ -110,7 +113,7 @@ public class MainFrame extends JFrame implements ActionListener {
         mobile2Label.setFont(new Font("Calibri", Font.BOLD, 20));
         mobile2Button = new JButton("Mobile 2");
         mobile2Panel = new JPanel();
-        mobile1Panel.setLayout(new GridLayout(2, 1, 0,0));
+        mobile2Panel.setLayout(new GridLayout(2, 1, 0,0));
         mobile2Panel.setBackground(Color.CYAN);
         mobile2Panel.setBounds(0, 200, 100, 100);
         mobile2Panel.add(mobile2Label);
@@ -120,7 +123,7 @@ public class MainFrame extends JFrame implements ActionListener {
         mobile3Label.setFont(new Font("Calibri", Font.BOLD, 20));
         mobile3Button = new JButton("Mobile 3");
         mobile3Panel = new JPanel();
-        mobile1Panel.setLayout(new GridLayout(2, 1, 0,0));
+        mobile3Panel.setLayout(new GridLayout(2, 1, 0,0));
         mobile3Panel.setBackground(Color.ORANGE);
         mobile3Panel.setBounds(0, 300, 100, 100);
         mobile3Panel.add(mobile3Label);

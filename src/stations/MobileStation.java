@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class MobileStation extends Station{
 
-    private BaseStation baseStation;
+
     private int packetsToSend;
     private int CWorder; // TODO should be incremented each time you have to back off
     private int backoffValue;
@@ -18,12 +18,10 @@ public class MobileStation extends Station{
     private final Random rand;
     private String owner;
 
-    private Channel channel;
 
 
 
-    public MobileStation(String name, BaseStation baseStation) {
-
+    public MobileStation(String name) {
         this.packetsToSend = 0;
         this.CWorder = 0;
         this.backoffValue = 0;
@@ -32,8 +30,7 @@ public class MobileStation extends Station{
 
         this.rand = new Random();
         this.owner = name;
-        this.channel = new Channel();
-        this.baseStation = baseStation;
+
         this.packet = new Packet();
 
     }
@@ -44,16 +41,13 @@ public class MobileStation extends Station{
         activeAction();
     }
 
-    public void setBaseStation(BaseStation baseStation) {
-        this.baseStation = baseStation;
-    }
 
     @Override
     protected void sendPacket(PacketType packetType) {
         super.sendPacket(packetType);
         packet.setOwner(owner);
         packet.setMessage("hello base");
-        baseStation.receptionAction(packet);
+        MainFrame.mainChannel.forward(packet);
         System.out.println(owner + ": " + packetType.toString() + " sent");
     }
 
@@ -66,7 +60,7 @@ public class MobileStation extends Station{
 
             if (stationState == StationState.IDLE) {
                 if (packetsToSend > 0) {
-                    if (channel.isBusy() || nav > 0)
+                    if (MainFrame.mainChannel.isBusy() || nav > 0)
                         BEB();
                     changeState(StationState.DIFS_beforeCountdown);
 
@@ -75,7 +69,7 @@ public class MobileStation extends Station{
                 elapsedTime(StationState.DIFS_beforeCountdown.time);
                 changeState(StationState.Countdown);
                 //TODO check this again
-                if (channel.isBusy() || nav > 0) {
+                if (MainFrame.mainChannel.isBusy() || nav > 0) {
                     //TODO will it need BEB()?
                     BEB();
                     changeState(StationState.DIFS_beforeCountdown);
@@ -87,7 +81,7 @@ public class MobileStation extends Station{
 
                 //TODO i think this should be removed
                 if (packetsToSend > 0) {
-                    if (channel.isBusy() || nav > 0) {
+                    if (MainFrame.mainChannel.isBusy() || nav > 0) {
                         changeState(StationState.IDLE);
                     }
                 }
@@ -137,20 +131,19 @@ public class MobileStation extends Station{
 
     @Override
     public void receptionAction(Packet packet) {
+        System.out.println(owner + ": received " + packet.getType().toString());
         if (stationState == StationState.IDLE || stationState == StationState.DIFS_beforeCountdown || stationState == StationState.Countdown) {
             if (!packet.isCorrupted() && packet.getNav() > nav)
                 nav = packet.getNav();
         } else if (stationState == StationState.rcvCTS) {
             if (!packet.isCorrupted() && packet.getOwner().equals(owner) && packet.getType() == PacketType.CTS) {
                 changeState(StationState.SIFS_before_emitPKT);
-                System.out.println(owner + ": received CTS");
             } else {
                 BEB();
                 changeState(StationState.DIFS_beforeCountdown);
             }
         } else if (stationState == StationState.rcvACK) {
             if (!packet.isCorrupted() && packet.getOwner().equals(owner) && packet.getType() == PacketType.ACK) {
-                System.out.println(owner + ": received ACK");
                 packetsToSend--;
                 if (packetsToSend > 0) {
                     CWorder = 3;

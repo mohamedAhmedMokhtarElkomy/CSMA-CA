@@ -10,10 +10,10 @@ public abstract class Station implements Runnable {
     protected Packet packet;
     protected StationState stationState;
 
-    Channel channel;    //TODO
+//    Channel channel;    //TODO
 
     protected Station() {
-        stationState = StationState.IDLE;
+        this.stationState = StationState.IDLE;
     }
 
     protected void changeState(StationState newState) {
@@ -40,7 +40,7 @@ public abstract class Station implements Runnable {
 
     protected void elapsedTime(int i) {
         try {
-            TimeUnit.MILLISECONDS.sleep(i * 100L);
+            TimeUnit.MILLISECONDS.sleep(i * 50L);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

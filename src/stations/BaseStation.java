@@ -7,9 +7,9 @@ import enums.StationState;
 public class BaseStation extends Station {
 
     private String currentSender;
-    MobileStation mobileStation;
-    public BaseStation(MobileStation mobileStation) {
-        this.mobileStation = mobileStation;
+    Channel channel;
+
+    public BaseStation() {
         this.currentSender = "";
     }
     @Override
@@ -85,7 +85,7 @@ public class BaseStation extends Station {
         //TODO sendCTS myChannel.receptionAction(emmitedPacket)
         super.sendPacket(packetType);
         packet.setOwner(currentSender);//TODO to be dynamic
-        mobileStation.receptionAction(packet);
-        System.out.println("base: " + packetType.toString() + " sent");
+        MainFrame.mainChannel.forward(packet);
+        System.out.println("base: " + packetType.toString() + " sent to " + packet.getOwner());
     }
 }
