@@ -40,7 +40,7 @@ public abstract class Station implements Runnable {
 
     protected void elapsedTime(int i) {
         try {
-            TimeUnit.MILLISECONDS.sleep(i * 10L);
+            TimeUnit.MILLISECONDS.sleep(i * 100L);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

@@ -2,22 +2,22 @@ package enums;
 
 public enum StationState
 {
-    IDLE(00),
-    SIFS_before_emitCTS(30),
-    emitCTS(150),
-    SIFS_before_rcvPKT(30),
-    rcvPKT(610),
-    SIFS_before_emitACk(30),
-    emitACK(100),
+    IDLE(0),
+    SIFS_before_emitCTS(3),
+    emitCTS(15),
+    SIFS_before_rcvPKT(3),
+    rcvPKT(61),
+    SIFS_before_emitACk(3),
+    emitACK(10),
 
-    DIFS_beforeCountdown(50),
-    Countdown(50),
-    emitRTS(150),
-    SIFS_before_rcvCTS(30),
-    rcvCTS(160),
-    SIFS_before_emitPKT(30),
-    emitPKT(600),
-    SIFS_before_rcvACK(30),
+    DIFS_beforeCountdown(5),
+    Countdown(5),
+    emitRTS(15),
+    SIFS_before_rcvCTS(3),
+    rcvCTS(16),
+    SIFS_before_emitPKT(3),
+    emitPKT(60),
+    SIFS_before_rcvACK(3),
     rcvACK(110);
     public final int time;
     StationState(int time) {

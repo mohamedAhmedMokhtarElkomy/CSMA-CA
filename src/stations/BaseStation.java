@@ -40,7 +40,8 @@ public class BaseStation extends Station {
                //TODO if pkt is correctly received, it will be handled by receptionAction(packet)
 
                elapsedTime(StationState.rcvPKT.time);
-               changeState(StationState.IDLE); //TODO packet not received
+               if((stationState == StationState.rcvPKT))
+                   changeState(StationState.IDLE); //TODO packet not received
            }
            else if (stationState == StationState.SIFS_before_emitACk) {
                elapsedTime(StationState.SIFS_before_emitACk.time);
