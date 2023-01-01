@@ -42,10 +42,10 @@ public class MobileStation extends Station {
 
     @Override
     protected void sendPacket(PacketType packetType) {
-        super.sendPacket(packetType);
+
         packet.setOwner(owner);
         packet.setMessage("hello base");
-        MainFrame.mainChannel.forward(packet);
+        super.sendPacket(packetType);
         System.out.println(owner + ": " + packetType.toString() + " sent");
     }
 

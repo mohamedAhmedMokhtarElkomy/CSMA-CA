@@ -97,9 +97,9 @@ public class BaseStation extends Station {
     @Override
     protected void sendPacket(PacketType packetType) {
         //TODO sendCTS myChannel.receptionAction(emmitedPacket)
-        super.sendPacket(packetType);
+
         packet.setOwner(currentSender);//TODO to be dynamic
-        MainFrame.mainChannel.forward(packet);
+        super.sendPacket(packetType);
         System.out.println("base: " + packetType.toString() + " sent to " + packet.getOwner());
     }
 }

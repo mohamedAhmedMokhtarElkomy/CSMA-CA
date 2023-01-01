@@ -1,6 +1,7 @@
 package stations;
 
 
+import GUI.MainFrame;
 import enums.PacketType;
 import enums.StationState;
 
@@ -51,6 +52,7 @@ public abstract class Station implements Runnable {
 
     protected void sendPacket(PacketType packetType){
         packet.setType(packetType);
+        MainFrame.mainChannel.forward(packet);
     }
 
 }
