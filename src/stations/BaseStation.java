@@ -12,47 +12,54 @@ public class BaseStation extends Station {
     public BaseStation() {
         this.currentSender = "";
     }
+
     @Override
     public void run() {
         System.out.println("base thread is running...");
         this.activeAction();
     }
+
+    @Override
+    protected void changeState(StationState newState) {
+        super.changeState(newState);
+        updateFrameLabels();
+
+    }
+
     @Override
     protected void activeAction() {
-       while(true){
+        while (true) {
 
-           updateFrameLabels();
+            updateFrameLabels();
 
-           if (stationState == StationState.IDLE)
-               doNothing();
-           else if (stationState == StationState.SIFS_before_emitCTS) {
-               elapsedTime(StationState.SIFS_before_emitCTS.time);
-               changeState(StationState.emitCTS);
-           } else if (stationState == StationState.emitCTS) {
-               elapsedTime(StationState.emitCTS.time);
+            if (stationState == StationState.IDLE)
+                doNothing();
+            else if (stationState == StationState.SIFS_before_emitCTS) {
+                elapsedTime(StationState.SIFS_before_emitCTS.time);
+                changeState(StationState.emitCTS);
+            } else if (stationState == StationState.emitCTS) {
+                elapsedTime(StationState.emitCTS.time);
                 sendPacket(PacketType.CTS);
-               changeState(StationState.SIFS_before_rcvPKT);
-           } else if (stationState == StationState.SIFS_before_rcvPKT) {
-               elapsedTime(StationState.SIFS_before_rcvPKT.time);
-               changeState(StationState.rcvPKT);
-               elapsedTime(StationState.rcvPKT.time);
-           } else if (stationState == StationState.rcvPKT) {
-               //TODO NOTE that this is the case of timeout.
-               //TODO if pkt is correctly received, it will be handled by receptionAction(packet)
+                changeState(StationState.SIFS_before_rcvPKT);
+            } else if (stationState == StationState.SIFS_before_rcvPKT) {
+                elapsedTime(StationState.SIFS_before_rcvPKT.time);
+                changeState(StationState.rcvPKT);
+                elapsedTime(StationState.rcvPKT.time);
+            } else if (stationState == StationState.rcvPKT) {
+                //TODO NOTE that this is the case of timeout.
+                //TODO if pkt is correctly received, it will be handled by receptionAction(packet)
 
 
-               changeState(StationState.IDLE); //TODO packet not received
-           }
-           else if (stationState == StationState.SIFS_before_emitACk) {
-               elapsedTime(StationState.SIFS_before_emitACk.time);
-               changeState(StationState.emitACK);
-           }
-           else if (stationState == StationState.emitACK) {
-               elapsedTime(StationState.emitACK.time);
-               sendPacket(PacketType.ACK);
-               changeState(StationState.IDLE);
-           }
-       }
+                changeState(StationState.IDLE); //TODO packet not received
+            } else if (stationState == StationState.SIFS_before_emitACk) {
+                elapsedTime(StationState.SIFS_before_emitACk.time);
+                changeState(StationState.emitACK);
+            } else if (stationState == StationState.emitACK) {
+                elapsedTime(StationState.emitACK.time);
+                sendPacket(PacketType.ACK);
+                changeState(StationState.IDLE);
+            }
+        }
     }
 
     @Override
@@ -68,11 +75,16 @@ public class BaseStation extends Station {
                     changeState(StationState.SIFS_before_emitCTS);
                 }
             }
-        }
-        else if(stationState == StationState.rcvPKT)
-            if(!packet.isCorrupted())
+        } else if (stationState == StationState.rcvPKT)
+            if (!packet.isCorrupted())
                 if (packet.getType() == PacketType.PKT && currentSender.equals(packet.getOwner()))
-                        changeState(StationState.SIFS_before_emitACk);
+                    changeState(StationState.SIFS_before_emitACk);
+                else
+                    System.out.println("==================================why not");
+            else
+                System.out.println("=========================packet is corrupted");
+        else
+            System.out.println("===================================else");
 
         updateFrameLabels();
     }

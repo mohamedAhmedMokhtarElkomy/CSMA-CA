@@ -122,6 +122,11 @@ public class MobileStation extends Station {
 
     }
 
+    @Override
+    protected void changeState(StationState newState) {
+        super.changeState(newState);
+        updateFrameLabels();
+    }
 
     @Override
     public void receptionAction(Packet packet) {
