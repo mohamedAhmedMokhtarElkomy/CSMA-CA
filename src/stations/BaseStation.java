@@ -35,13 +35,13 @@ public class BaseStation extends Station {
            } else if (stationState == StationState.SIFS_before_rcvPKT) {
                elapsedTime(StationState.SIFS_before_rcvPKT.time);
                changeState(StationState.rcvPKT);
+               elapsedTime(StationState.rcvPKT.time);
            } else if (stationState == StationState.rcvPKT) {
                //TODO NOTE that this is the case of timeout.
                //TODO if pkt is correctly received, it will be handled by receptionAction(packet)
 
-               elapsedTime(StationState.rcvPKT.time);
-               if((stationState == StationState.rcvPKT))
-                   changeState(StationState.IDLE); //TODO packet not received
+
+               changeState(StationState.IDLE); //TODO packet not received
            }
            else if (stationState == StationState.SIFS_before_emitACk) {
                elapsedTime(StationState.SIFS_before_emitACk.time);
@@ -57,6 +57,8 @@ public class BaseStation extends Station {
 
     @Override
     public void receptionAction(Packet packet) {
+        System.out.println("base: received " + packet.getType().toString());
+
         this.packet = packet;
 
         if (stationState == StationState.IDLE) {

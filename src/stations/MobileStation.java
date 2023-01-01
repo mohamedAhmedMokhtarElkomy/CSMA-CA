@@ -6,7 +6,7 @@ import enums.StationState;
 
 import java.util.Random;
 
-public class MobileStation extends Station{
+public class MobileStation extends Station {
 
 
     private int packetsToSend;
@@ -17,8 +17,6 @@ public class MobileStation extends Station{
     private int nav; //it is approximation of how long the channel is going to be busy
     private final Random rand;
     private String owner;
-
-
 
 
     public MobileStation(String name) {
@@ -56,7 +54,7 @@ public class MobileStation extends Station{
         while (true) {
 
 //            System.out.println(convertStateToString() + ", packets= " + packetsToSend);
-           updateFrameLabels();
+            updateFrameLabels();
 
             if (stationState == StationState.IDLE) {
                 if (packetsToSend > 0) {
@@ -97,13 +95,10 @@ public class MobileStation extends Station{
             } else if (stationState == StationState.SIFS_before_rcvCTS) {
                 elapsedTime(StationState.SIFS_before_rcvCTS.time);
                 changeState(StationState.rcvCTS);
-            } else if (stationState == StationState.rcvCTS) {
                 elapsedTime(StationState.rcvCTS.time);
-                //TODO when packet received hear how to break?
-                if(stationState == StationState.rcvCTS) {
-                    changeState(StationState.DIFS_beforeCountdown);
-                    BEB();
-                }
+            } else if (stationState == StationState.rcvCTS) {
+                changeState(StationState.DIFS_beforeCountdown);
+                BEB();
             } else if (stationState == StationState.SIFS_before_emitPKT) {
                 elapsedTime(StationState.SIFS_before_emitPKT.time);
                 changeState(StationState.emitPKT);
@@ -116,18 +111,17 @@ public class MobileStation extends Station{
             } else if (stationState == StationState.SIFS_before_rcvACK) {
                 elapsedTime(StationState.SIFS_before_rcvACK.time);
                 changeState(StationState.rcvACK);
-
-            } else if (stationState == StationState.rcvACK) {
                 elapsedTime(StationState.rcvACK.time);
-                if (stationState == StationState.rcvACK) {
-                    BEB();
-                    changeState(StationState.DIFS_beforeCountdown);
-                }
+            } else if (stationState == StationState.rcvACK) {
 
+                BEB();
+                changeState(StationState.DIFS_beforeCountdown);
             }
 
         }
+
     }
+
 
     @Override
     public void receptionAction(Packet packet) {
@@ -166,13 +160,14 @@ public class MobileStation extends Station{
         packetsToSend++;
         updateFrameLabels();
     }
+
     @Override
     protected void updateFrameLabels() {
-        if(owner == "1")
+        if (owner == "1")
             MainFrame.mobile1Label.setText(stationState.toString() + " packets to send: " + packetsToSend);
-        else if(owner == "2")
+        else if (owner == "2")
             MainFrame.mobile2Label.setText(stationState.toString() + " packets to send: " + packetsToSend);
-        else if(owner == "3")
+        else if (owner == "3")
             MainFrame.mobile3Label.setText(stationState.toString() + " packets to send: " + packetsToSend);
     }
 }
