@@ -10,6 +10,7 @@ public class BaseStation extends Station {
 
     public BaseStation() {
         this.currentSender = "";
+        owner = "base";
     }
 
     @Override
@@ -76,7 +77,8 @@ public class BaseStation extends Station {
     @Override
     protected void sendPacket(PacketType packetType) {
         packet.setOwner(currentSender);
-        super.sendPacket(packetType);
+        packet.setType(packetType);
+        MainFrame.mainChannel.fromBase(packet);
         System.out.println("base: " + packetType.toString() + " sent to " + packet.getOwner());
     }
 }

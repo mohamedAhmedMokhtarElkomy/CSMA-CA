@@ -16,7 +16,6 @@ public class MobileStation extends Station {
     //nav greater than zero mean guessing that the channel is busy
     private int nav; //it is approximation of how long the channel is going to be busy
     private final Random rand;
-    private String owner;
 
 
     public MobileStation(String name) {
@@ -44,7 +43,8 @@ public class MobileStation extends Station {
 
         packet.setOwner(owner);
         packet.setMessage("hello base");
-        super.sendPacket(packetType);
+        packet.setType(packetType);
+        MainFrame.mainChannel.forward(packet);
         System.out.println(owner + ": " + packetType.toString() + " sent");
     }
 

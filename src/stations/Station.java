@@ -10,7 +10,11 @@ import java.util.concurrent.TimeUnit;
 public abstract class Station implements Runnable {
     protected Packet packet;
     protected StationState stationState;
+    protected String owner;
 
+    public String getOwner() {
+        return owner;
+    }
 //    Channel channel;    //TODO
 
     protected Station() {
@@ -43,7 +47,7 @@ public abstract class Station implements Runnable {
 
     protected void elapsedTime(int i) {
         try {
-            TimeUnit.MILLISECONDS.sleep(i * 250L);
+            TimeUnit.MILLISECONDS.sleep(i * 500L);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -52,8 +56,7 @@ public abstract class Station implements Runnable {
     protected void updateFrameLabels(){}
 
     protected void sendPacket(PacketType packetType){
-        packet.setType(packetType);
-        MainFrame.mainChannel.forward(packet);
+
     }
 
 }

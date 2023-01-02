@@ -6,7 +6,7 @@ public enum StationState
     SIFS_before_emitCTS(3),
     emitCTS(15),
     SIFS_before_rcvPKT(3),
-    rcvPKT(62),
+    rcvPKT(62), //Changed from 60 to 62
     SIFS_before_emitACk(3),
     emitACK(10),
 

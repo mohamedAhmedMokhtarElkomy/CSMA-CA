@@ -32,9 +32,22 @@ public class Channel {
 
     public void forward(Packet packet){
         baseStation.receptionAction(packet);
-        mobileStation1.receptionAction(packet);
-        mobileStation2.receptionAction(packet);
-        mobileStation3.receptionAction(packet);
+    }
+
+    public void fromBase(Packet packet){
+//        if (packet.getType() == PacketType.CTS || packet.getType() == PacketType.ACK){
+            mobileStation1.receptionAction(packet);
+            mobileStation2.receptionAction(packet);
+            mobileStation3.receptionAction(packet);
+//        }
+//        else {
+//            if(packet.getOwner().equals(mobileStation1.getOwner()))
+//                mobileStation1.receptionAction(packet);
+//            else if(packet.getOwner().equals(mobileStation2.getOwner()))
+//                mobileStation1.receptionAction(packet);
+//            else if(packet.getOwner().equals(mobileStation3.getOwner()))
+//                mobileStation1.receptionAction(packet);
+//        }
     }
 }
 
