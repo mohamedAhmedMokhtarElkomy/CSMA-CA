@@ -4,6 +4,8 @@ import GUI.MainFrame;
 import enums.PacketType;
 import enums.StationState;
 
+import java.util.Random;
+
 public class BaseStation extends Station {
 
     private String currentSender;
@@ -78,6 +80,8 @@ public class BaseStation extends Station {
     protected void sendPacket(PacketType packetType) {
         packet.setOwner(currentSender);
         packet.setType(packetType);
+        packet.setNav(new Random().nextInt(60, 100));
+        //rand.nextInt(100);
         MainFrame.mainChannel.fromBase(packet);
         System.out.println("base: " + packetType.toString() + " sent to " + packet.getOwner());
     }

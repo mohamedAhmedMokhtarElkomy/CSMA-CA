@@ -23,7 +23,9 @@ public class Channel {
     private boolean isBusy = false;
 
     public boolean isBusy() {
-        return false;
+        if(isBusy)
+            System.out.println("===========================channel is busy========================");
+        return isBusy;
     }
 
     public void setBusy(boolean busy) {
@@ -39,6 +41,10 @@ public class Channel {
             mobileStation1.receptionAction(packet);
             mobileStation2.receptionAction(packet);
             mobileStation3.receptionAction(packet);
+            if (packet.getType() == PacketType.CTS)
+                isBusy = true;
+            else if (packet.getType() == PacketType.ACK)
+                isBusy = false;
 //        }
 //        else {
 //            if(packet.getOwner().equals(mobileStation1.getOwner()))

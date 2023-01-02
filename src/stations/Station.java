@@ -11,6 +11,7 @@ public abstract class Station implements Runnable {
     protected Packet packet;
     protected StationState stationState;
     protected String owner;
+    protected int nav; //it is approximation of how long the channel is going to be busy
 
     public String getOwner() {
         return owner;
@@ -20,6 +21,7 @@ public abstract class Station implements Runnable {
     protected Station() {
         this.stationState = StationState.IDLE;
         this.packet = new Packet();
+        this.nav = 0;
     }
 
     protected void changeState(StationState newState) {
@@ -51,6 +53,12 @@ public abstract class Station implements Runnable {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        if(nav > 0){
+            nav-=i;
+        }
+        if (nav < 0)
+            nav = 0;
+        updateFrameLabels();
     }
 
     protected void updateFrameLabels(){}

@@ -14,7 +14,7 @@ public class MobileStation extends Station {
     private int backoffValue;
 
     //nav greater than zero mean guessing that the channel is busy
-    private int nav; //it is approximation of how long the channel is going to be busy
+
     private final Random rand;
 
 
@@ -22,7 +22,7 @@ public class MobileStation extends Station {
         this.packetsToSend = 0;
         this.CWorder = 0;
         this.backoffValue = 0;
-        this.nav = 0;
+
         this.owner = "";
 
         this.rand = new Random();
@@ -51,6 +51,7 @@ public class MobileStation extends Station {
     @Override
     protected void activeAction() {
         while (true) {
+
             updateFrameLabels();
 
             if (stationState == StationState.IDLE) {
@@ -67,17 +68,17 @@ public class MobileStation extends Station {
                 if (MainFrame.mainChannel.isBusy() || nav > 0) {
                     BEB();
                 }
-            } else if (stationState == StationState.Countdown) {//TODO check this whole condition
+            } else if (stationState == StationState.Countdown) {
                 elapsedTime(StationState.Countdown.time);
-                backoffValue--;
+                if (backoffValue > 0)
+                    backoffValue--;
 
-                //TODO i think this should be removed
-                if (packetsToSend > 0) {
-                    if (MainFrame.mainChannel.isBusy() || nav > 0) {
-                        changeState(StationState.IDLE);
-                    }
-                }
-                if (backoffValue <= 0)
+//                if (packetsToSend > 0) {
+//                    if (MainFrame.mainChannel.isBusy() || nav > 0) {
+//                        changeState(StationState.IDLE);
+//                    }
+//                }
+                if (backoffValue <= 0 && nav <= 0)
                     changeState(StationState.emitRTS);
             } else if (stationState == StationState.emitRTS) {
                 elapsedTime(StationState.emitRTS.time);
@@ -112,10 +113,17 @@ public class MobileStation extends Station {
     @Override
     public void receptionAction(Packet packet) {
         System.out.println(owner + ": received " + packet.getType().toString());
-        if (stationState == StationState.IDLE || stationState == StationState.DIFS_beforeCountdown || stationState == StationState.Countdown) {
-            if (!packet.isCorrupted() && packet.getNav() > nav)
-                nav = packet.getNav();
-        } else if (stationState == StationState.rcvCTS) {
+        if (!packet.getOwner().equals(owner)) {
+            if (packet.getType() == PacketType.CTS)
+                if (!packet.isCorrupted() && packet.getNav() > nav)
+                    nav = packet.getNav();
+            else if (packet.getType() == PacketType.ACK)
+                nav = 0;
+        }
+//        if (stationState == StationState.IDLE || stationState == StationState.DIFS_beforeCountdown || stationState == StationState.Countdown)
+//            if (!packet.isCorrupted() && packet.getNav() > nav)
+//                nav = packet.getNav();
+        else if (stationState == StationState.rcvCTS) {
             if (!packet.isCorrupted() && packet.getOwner().equals(owner) && packet.getType() == PacketType.CTS) {
                 changeState(StationState.SIFS_before_emitPKT);
             } else {
@@ -136,9 +144,12 @@ public class MobileStation extends Station {
 
     public void BEB() {
         System.out.println(owner + ": BEB is called");
-        CWorder++;
-        backoffValue = rand.nextInt((int) (Math.pow(2, CWorder) + 1));
-        changeState(StationState.DIFS_beforeCountdown);
+        if(backoffValue <= 0)
+        {
+            CWorder++;
+            backoffValue = rand.nextInt((int) (Math.pow(2, CWorder) + 1));
+        }
+        changeState(StationState.Countdown);
     }
 
     public void hitButton() {
@@ -149,10 +160,10 @@ public class MobileStation extends Station {
     @Override
     protected void updateFrameLabels() {
         if (owner.equals("1"))
-            MainFrame.mobile1Label.setText(stationState.toString() + ", packets to send: " + packetsToSend);
+            MainFrame.mobile1Label.setText(stationState.toString() + ", packets to send: " + packetsToSend + ", nav: " + nav  + ", backoffValue: " + backoffValue);
         else if (owner.equals("2"))
-            MainFrame.mobile2Label.setText(stationState.toString() + ", packets to send: " + packetsToSend);
+            MainFrame.mobile2Label.setText(stationState.toString() + ", packets to send: " + packetsToSend + ", nav: " + nav + ", backoffValue: " + backoffValue);
         else if (owner.equals("3"))
-            MainFrame.mobile3Label.setText(stationState.toString() + ", packets to send: " + packetsToSend);
+            MainFrame.mobile3Label.setText(stationState.toString() + ", packets to send: " + packetsToSend + ", nav: " + nav + ", backoffValue: " + backoffValue);
     }
 }
