@@ -29,7 +29,6 @@ public class MobileStation extends Station {
         this.rand = new Random();
         this.owner = name;
 
-        this.packet = new Packet();
 
     }
 
@@ -52,8 +51,6 @@ public class MobileStation extends Station {
     @Override
     protected void activeAction() {
         while (true) {
-
-//            System.out.println(convertStateToString() + ", packets= " + packetsToSend);
             updateFrameLabels();
 
             if (stationState == StationState.IDLE) {
@@ -68,14 +65,11 @@ public class MobileStation extends Station {
                 changeState(StationState.Countdown);
                 //TODO check this again
                 if (MainFrame.mainChannel.isBusy() || nav > 0) {
-                    //TODO will it need BEB()?
                     BEB();
-                    changeState(StationState.DIFS_beforeCountdown);
                 }
             } else if (stationState == StationState.Countdown) {//TODO check this whole condition
                 elapsedTime(StationState.Countdown.time);
                 backoffValue--;
-                changeState(StationState.Countdown);
 
                 //TODO i think this should be removed
                 if (packetsToSend > 0) {
@@ -83,8 +77,6 @@ public class MobileStation extends Station {
                         changeState(StationState.IDLE);
                     }
                 }
-
-                //TODO TOCHECK this condition
                 if (backoffValue <= 0)
                     changeState(StationState.emitRTS);
             } else if (stationState == StationState.emitRTS) {
@@ -97,7 +89,6 @@ public class MobileStation extends Station {
                 changeState(StationState.rcvCTS);
                 elapsedTime(StationState.rcvCTS.time);
             } else if (stationState == StationState.rcvCTS) {
-                changeState(StationState.DIFS_beforeCountdown);
                 BEB();
             } else if (stationState == StationState.SIFS_before_emitPKT) {
                 elapsedTime(StationState.SIFS_before_emitPKT.time);
@@ -113,19 +104,9 @@ public class MobileStation extends Station {
                 changeState(StationState.rcvACK);
                 elapsedTime(StationState.rcvACK.time);
             } else if (stationState == StationState.rcvACK) {
-
                 BEB();
-                changeState(StationState.DIFS_beforeCountdown);
             }
-
         }
-
-    }
-
-    @Override
-    protected void changeState(StationState newState) {
-        super.changeState(newState);
-        updateFrameLabels();
     }
 
     @Override
@@ -139,7 +120,6 @@ public class MobileStation extends Station {
                 changeState(StationState.SIFS_before_emitPKT);
             } else {
                 BEB();
-                changeState(StationState.DIFS_beforeCountdown);
             }
         } else if (stationState == StationState.rcvACK) {
             if (!packet.isCorrupted() && packet.getOwner().equals(owner) && packet.getType() == PacketType.ACK) {
@@ -147,18 +127,18 @@ public class MobileStation extends Station {
                 if (packetsToSend > 0) {
                     CWorder = 3;
                     BEB();
-                    changeState(StationState.DIFS_beforeCountdown);
                 } else
                     changeState(StationState.IDLE);
             }
         }
+        updateFrameLabels();
     }
 
     public void BEB() {
-        System.out.println("BEB is called");
+        System.out.println(owner + ": BEB is called");
         CWorder++;
         backoffValue = rand.nextInt((int) (Math.pow(2, CWorder) + 1));
-        //TODO changeState(StationState.DIFS_beforeCountdown);
+        changeState(StationState.DIFS_beforeCountdown);
     }
 
     public void hitButton() {
@@ -168,11 +148,11 @@ public class MobileStation extends Station {
 
     @Override
     protected void updateFrameLabels() {
-        if (owner == "1")
-            MainFrame.mobile1Label.setText(stationState.toString() + " packets to send: " + packetsToSend);
-        else if (owner == "2")
-            MainFrame.mobile2Label.setText(stationState.toString() + " packets to send: " + packetsToSend);
-        else if (owner == "3")
-            MainFrame.mobile3Label.setText(stationState.toString() + " packets to send: " + packetsToSend);
+        if (owner.equals("1"))
+            MainFrame.mobile1Label.setText(stationState.toString() + ", packets to send: " + packetsToSend);
+        else if (owner.equals("2"))
+            MainFrame.mobile2Label.setText(stationState.toString() + ", packets to send: " + packetsToSend);
+        else if (owner.equals("3"))
+            MainFrame.mobile3Label.setText(stationState.toString() + ", packets to send: " + packetsToSend);
     }
 }

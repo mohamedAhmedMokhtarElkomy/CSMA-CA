@@ -11,8 +11,6 @@ import java.awt.event.ActionListener;
 
 public class MainFrame extends JFrame implements ActionListener {
 
-    int count = 0;// store number of clicks
-
     public static Channel mainChannel;
     JFrame frame;
     JButton mobile1Button;
@@ -89,8 +87,6 @@ public class MainFrame extends JFrame implements ActionListener {
     }
 
     private void constructFrame() {
-
-
 
         baseLabel = new JLabel();
         baseLabel.setFont(new Font("Calibri", Font.BOLD, 20));

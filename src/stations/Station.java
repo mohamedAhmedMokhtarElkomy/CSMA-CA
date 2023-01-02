@@ -15,10 +15,12 @@ public abstract class Station implements Runnable {
 
     protected Station() {
         this.stationState = StationState.IDLE;
+        this.packet = new Packet();
     }
 
     protected void changeState(StationState newState) {
         stationState = newState;
+        updateFrameLabels();
     }
     protected StationState getStationState() {
         return stationState;
@@ -41,12 +43,11 @@ public abstract class Station implements Runnable {
 
     protected void elapsedTime(int i) {
         try {
-            TimeUnit.MILLISECONDS.sleep(i * 50L);
+            TimeUnit.MILLISECONDS.sleep(i * 250L);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
-
 
     protected void updateFrameLabels(){}
 

@@ -7,7 +7,6 @@ import enums.StationState;
 public class BaseStation extends Station {
 
     private String currentSender;
-    Channel channel;
 
     public BaseStation() {
         this.currentSender = "";
@@ -20,16 +19,8 @@ public class BaseStation extends Station {
     }
 
     @Override
-    protected void changeState(StationState newState) {
-        super.changeState(newState);
-        updateFrameLabels();
-
-    }
-
-    @Override
     protected void activeAction() {
         while (true) {
-
             updateFrameLabels();
 
             if (stationState == StationState.IDLE)
@@ -45,12 +36,8 @@ public class BaseStation extends Station {
                 elapsedTime(StationState.SIFS_before_rcvPKT.time);
                 changeState(StationState.rcvPKT);
                 elapsedTime(StationState.rcvPKT.time);
-            } else if (stationState == StationState.rcvPKT) {
-                //TODO NOTE that this is the case of timeout.
-                //TODO if pkt is correctly received, it will be handled by receptionAction(packet)
-
-
-                changeState(StationState.IDLE); //TODO packet not received
+            } else if (stationState == StationState.rcvPKT) { //if pkt is correctly received, it will be handled by receptionAction(packet)
+                changeState(StationState.IDLE);
             } else if (stationState == StationState.SIFS_before_emitACk) {
                 elapsedTime(StationState.SIFS_before_emitACk.time);
                 changeState(StationState.emitACK);
@@ -67,7 +54,6 @@ public class BaseStation extends Station {
         System.out.println("base: received " + packet.getType().toString());
 
         this.packet = packet;
-
         if (stationState == StationState.IDLE) {
             if (!packet.isCorrupted()) {
                 if (packet.getType() == PacketType.RTS) {
@@ -79,13 +65,6 @@ public class BaseStation extends Station {
             if (!packet.isCorrupted())
                 if (packet.getType() == PacketType.PKT && currentSender.equals(packet.getOwner()))
                     changeState(StationState.SIFS_before_emitACk);
-                else
-                    System.out.println("==================================why not");
-            else
-                System.out.println("=========================packet is corrupted");
-        else
-            System.out.println("===================================else");
-
         updateFrameLabels();
     }
 
@@ -96,9 +75,7 @@ public class BaseStation extends Station {
 
     @Override
     protected void sendPacket(PacketType packetType) {
-        //TODO sendCTS myChannel.receptionAction(emmitedPacket)
-
-        packet.setOwner(currentSender);//TODO to be dynamic
+        packet.setOwner(currentSender);
         super.sendPacket(packetType);
         System.out.println("base: " + packetType.toString() + " sent to " + packet.getOwner());
     }
